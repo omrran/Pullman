@@ -1,0 +1,61 @@
+@extends('A_master')
+
+@section('title')<title>Passenger Profile</title>@endsection
+
+@section('content')
+
+
+    <x-navbar />
+        <div class="container mt-2  ">
+            <div class="row">
+                <div class="col-12 col-lg-9 text-center  border-primary p-0">
+                    <div class="d-flex justify-content-around  border border-secondary border-custom-nav bg-body" style="height: 40px">
+                        <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="#">News</a></div>
+                        <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="#">Ask question</a></div>
+                        <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="#">Companies</a></div>
+
+                    </div>
+                    <div class="container mt-2">
+
+                        <table class="table table-success table-striped">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>IDN</th>
+                            </tr>
+                            <tr>
+                                <td>{{$pass->id}}</td>
+                                <td>{{$pass->fName}}</td>
+                                <td>{{$pass->phone}}</td>
+                                <td>{{$pass->idn}}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-3 text-center p-0 shadow ">
+                    <div class="bg-dark w-100 text-white fs-4 rounded-pill-right-custom" style="height: 40px">
+                        Passenger Profile
+                    </div>
+                    <div class="p-2  d-flex flex-column justify-content-start border border-secondary border-custom-side d-flex flex-column justify-content-start bg-body">
+                        <div class="d-flex flex-column ">
+                            <img width="125" height="125"  class="rounded-circle img-thumbnail m-auto" src="{{asset('photos/111.jpg')}}">
+                            <h5>Omran Mohamad</h5>
+                        </div>
+                        <div class=" border border-secondary m-auto  rounded-pill view-custom-pro  px-5"><a href="#">view profile</a> </div>
+                        <hr class="m-2 "/>
+                        <div class="text-start">My Reservations :</div>
+                        <div class="text-center sidebar-custom-item "><a href="#">Company at : 20/10/2022</a> </div>
+                        <hr class="m-2 "/>
+                        <div class="text-start sidebar-custom-item p-1"><a href="#">Activity Log</a> </div>
+                        <hr class="m-2 "/>
+                        <div class="text-start sidebar-custom-item p-1"><a href="/passenger-profile/log-out-pass">Log out</a> </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+@endsection
