@@ -91,6 +91,7 @@ Route::group(['prefix' => 'passenger-profile', 'middleware' => 'checkAuthPasseng
     Route::get('/', [MainController::class, 'passengerProfile']);
     Route::get('/write-post', [MainController::class, 'writePostPassenger']);
     Route::post('/save-post', [MainController::class, 'savePost']);
+    Route::get('/news', [MainController::class, 'passengerNews']);
     Route::get('/log-out-pass', [MainController::class, 'logOutPass']);
 
 });

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Passenger;
+
 
 class PassengerPost extends Model
 {
@@ -17,7 +19,7 @@ class PassengerPost extends Model
         'updated_at'
     ];
 
-    public function passenger(){
-        return $this->belongsTo('app\Models\Passenger','passId');
+    public function Passenger(){
+        return $this->belongsTo('App\Models\Passenger','passId','id');
     }
 }

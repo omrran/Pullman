@@ -22,7 +22,7 @@ class Trip extends Model
     ];
 
     public function company(){
-        return $this->belongsTo('app\Models\Company','compId');
+        return $this->belongsTo('App\Models\Company','compId','id');
     }
 
 }

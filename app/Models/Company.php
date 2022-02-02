@@ -21,12 +21,12 @@ class Company extends Model
         'updated_at'
     ];
 
-    public function companyPost(){
-        return $this->hasOne('app\Models\CompanyPost','compId');
+    public function companyPosts(){
+        return $this->hasMany('App\Models\CompanyPost','compId','id');
     }
 
-    public function companyTrip(){
-        return $this->hasOne('app\Models\Trip','compId');
+    public function companyTrips(){
+        return $this->hasMany('App\Models\Trip','compId','id');
     }
 
 

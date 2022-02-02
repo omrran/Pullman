@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-12 col-lg-9 text-center  border-primary p-0">
                     <div class="d-flex justify-content-around  border border-secondary border-custom-nav bg-body" style="height: 40px">
-                        <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="#">News</a></div>
+                        <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="/passenger-profile/news">News</a></div>
                         <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="/passenger-profile/write-post">Write A Post</a></div>
 
                     </div>

@@ -21,7 +21,7 @@ class Passenger extends Model
         'created_at',
         'updated_at'
     ];
-    public function passengerPost(){
-        return $this->hasOne('app\Models\PassengerPost','passId');
+    public function passengerPosts(){
+        return $this->hasMany('app\Models\PassengerPost','passId','id');
     }
 }

@@ -1,11 +1,11 @@
-@extends('companyProfile')
+@extends('passenger.passengerProfile')
 
 @section('main content')
 
     <div class="m-auto p-3  border rounded-bottom rounded-circle bg-blue text-light">
         News
     </div>
-    <div class=" w-100 mx-auto border border-primary border-3 rounded-3 p-2 d-flex flex-wrap justify-content-center ">
+    <div class=" w-100 mx-auto border border-primary border-3 rounded-3 p-2 d-flex flex-wrap  ">
 
         @foreach($openTrips as $trip)
             <x-trip
@@ -28,7 +28,7 @@
 
         @foreach($passengerPosts as $post)
             <x-post postContent="{{$post->content}}"
-                    companyName="{{$post->company->compName}}"
+                    companyName="{{$post->passenger->fName}}"
                     postTime="{{$post->created_at}}"/>
         @endforeach
 

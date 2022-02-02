@@ -462,14 +462,30 @@ class MainController extends Controller
 
     public function news()
     {
-        $company = Company::where('id', Session::get('LoggedCompany'))->first();
+
+         $company = Company::where('id', Session::get('LoggedCompany'))->first();
         $openTrips = Trip::with('company')->where('status', 'open')
+            ->orderBy('created_at', 'desc')->get();
+        $companyPosts = CompanyPost::with('company')->orderBy('created_at', 'desc')->get();
+          $passengerPosts = PassengerPost::with('passenger')->orderBy('created_at', 'desc')->get();
+
+        return view('company-news', [
+            'company' => $company,
+            'openTrips' => $openTrips,
+            'passengerPosts' => $passengerPosts,
+            'companyPosts' => $companyPosts,
+        ]);
+    }
+    public function passengerNews()
+    {
+        $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
+         $openTrips = Trip::with('company')->where('status', 'open')
             ->orderBy('created_at', 'desc')->get();
         $companyPosts = CompanyPost::with('company')->orderBy('created_at', 'desc')->get();
         $passengerPosts = PassengerPost::with('passenger')->orderBy('created_at', 'desc')->get();
 
-        return view('news', [
-            'company' => $company,
+        return view('passenger/passenger-news', [
+            'passenger' => $passenger,
             'openTrips' => $openTrips,
             'passengerPosts' => $passengerPosts,
             'companyPosts' => $companyPosts,
