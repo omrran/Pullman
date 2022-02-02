@@ -23,7 +23,6 @@
                             Trips</a></div>
                 </div>
                 <div class="d-flex flex-column  mt-2 mx-2">
-
                     @yield('main content')
                 </div>
 

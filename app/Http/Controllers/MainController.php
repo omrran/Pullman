@@ -211,9 +211,9 @@ class MainController extends Controller
     public function passengerProfile()
     {
         if (Session::has('LoggedPassenger')) {
-            $pass = Passenger::where('id', Session::get('LoggedPassenger'))->first();
+            $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
 
-            return view('passengerProfile', compact('pass'));
+            return view('passenger/passengerProfile', ['passenger' => $passenger]);
         }
 
     }
@@ -437,25 +437,36 @@ class MainController extends Controller
         return view('writePost', ['company' => $company]);
     }
 
+    public function writePostPassenger()
+    {
+        $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
+        return view('passenger/writePostPassenger', ['passenger' => $passenger]);
+    }
+
     public function savePost(Request $request)
     {
         if (trim($request->all()['post']) == "") {
             return redirect()->back();
         }
-        if (Session::has('LoggedCompany'))
+        if (Session::has('LoggedCompany')) {
             CompanyPost::create(['compId' => Session::get('LoggedCompany'), 'content' => $request->post]);
-        if(Session::has('LoggedPassenger'))
-            PassengerPost::create(['passId' => Session::get('LoggedPassenger'), 'content' => $request->post]);
+            return redirect('/company-profile/news');
+        }
 
-        return redirect('/company-profile/news');
+        if (Session::has('LoggedPassenger')) {
+            PassengerPost::create(['passId' => Session::get('LoggedPassenger'), 'content' => $request->post]);
+            return redirect('/passenger-profile/news');
+        }
+
     }
 
     public function news()
     {
         $company = Company::where('id', Session::get('LoggedCompany'))->first();
-        $openTrips = Trip::with('company')->where('status','open')->get();
-        $companyPosts = CompanyPost::with('company')->get();
-        $passengerPosts = PassengerPost::with('passenger')->get();
+        $openTrips = Trip::with('company')->where('status', 'open')
+            ->orderBy('created_at', 'desc')->get();
+        $companyPosts = CompanyPost::with('company')->orderBy('created_at', 'desc')->get();
+        $passengerPosts = PassengerPost::with('passenger')->orderBy('created_at', 'desc')->get();
 
         return view('news', [
             'company' => $company,
@@ -488,6 +499,11 @@ class MainController extends Controller
 
         $companies = Company::get();
         return view('companies', compact('companies'));
+    }
+
+    public function reserveASeat($passId, $tripId)
+    {
+
     }
 
 }

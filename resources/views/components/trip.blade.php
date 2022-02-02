@@ -18,9 +18,11 @@
         <p class="text-start m-2"><strong>Price A Seat</strong> : {{$price}}</p>
         <p class="text-start m-2"><strong>Time</strong> : {{$time}}</p>
     </div>
+    @if(\Illuminate\Support\Facades\Session::has('LoggedPassenger'))
     <hr class="m-0">
     <div type="button" onclick=""
          class="btn btn-warning  mt-1 p-0 w-100 text-white">
         Reserve  A Seat
     </div>
+    @endif
 </div>

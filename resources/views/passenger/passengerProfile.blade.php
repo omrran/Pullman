@@ -11,26 +11,11 @@
                 <div class="col-12 col-lg-9 text-center  border-primary p-0">
                     <div class="d-flex justify-content-around  border border-secondary border-custom-nav bg-body" style="height: 40px">
                         <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="#">News</a></div>
-                        <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="#">Ask question</a></div>
-                        <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="#">Companies</a></div>
+                        <div class="pt-2 sidebar-custom-item fst-italic fw-bold"><a href="/passenger-profile/write-post">Write A Post</a></div>
 
                     </div>
-                    <div class="container mt-2">
-
-                        <table class="table table-success table-striped">
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>IDN</th>
-                            </tr>
-                            <tr>
-                                <td>{{$pass->id}}</td>
-                                <td>{{$pass->fName}}</td>
-                                <td>{{$pass->phone}}</td>
-                                <td>{{$pass->idn}}</td>
-                            </tr>
-                        </table>
+                    <div class="d-flex flex-column  mt-2 mx-2">
+                        @yield('main content')
                     </div>
 
                 </div>
@@ -41,7 +26,7 @@
                     <div class="p-2  d-flex flex-column justify-content-start border border-secondary border-custom-side d-flex flex-column justify-content-start bg-body">
                         <div class="d-flex flex-column ">
                             <img width="125" height="125"  class="rounded-circle img-thumbnail m-auto" src="{{asset('photos/111.jpg')}}">
-                            <h5>Omran Mohamad</h5>
+                            <h5>{{$passenger->fName}} {{$passenger->lName}}</h5>
                         </div>
                         <div class=" border border-secondary m-auto  rounded-pill view-custom-pro  px-5"><a href="#">view profile</a> </div>
                         <hr class="m-2 "/>
