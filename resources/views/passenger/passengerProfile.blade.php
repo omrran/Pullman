@@ -19,19 +19,21 @@
                     </div>
 
                 </div>
-                <div class="col-12 col-lg-3 text-center p-0 shadow ">
+                <div class="col-12 col-lg-3 text-center p-0  ">
                     <div class="bg-dark w-100 text-white fs-4 rounded-pill-right-custom" style="height: 40px">
                         Passenger Profile
                     </div>
                     <div class="p-2  d-flex flex-column justify-content-start border border-secondary border-custom-side d-flex flex-column justify-content-start bg-body">
                         <div class="d-flex flex-column ">
-                            <img width="125" height="125"  class="rounded-circle img-thumbnail m-auto" src="{{asset('photos/111.jpg')}}">
+                            <img width="125" height="125"  class="rounded-circle img-thumbnail m-auto" src="{{asset('photos/'.$passenger->imagePath)}}">
                             <h5>{{$passenger->fName}} {{$passenger->lName}}</h5>
                         </div>
-                        <div class=" border border-secondary m-auto  rounded-pill view-custom-pro  px-5"><a href="#">view profile</a> </div>
+                        <div class=" border border-secondary m-auto  rounded-pill view-custom-pro  px-5"><a href="/passenger-profile/view-profile">view profile</a> </div>
                         <hr class="m-2 "/>
                         <div class="text-start">My Reservations :</div>
-                        <div class="text-center sidebar-custom-item "><a href="#">Company at : 20/10/2022</a> </div>
+                        @foreach($myReservations as $reserve)
+                            <div class="text-center sidebar-custom-item "><a href="/passenger-profile/trip/{{$reserve->tripId}}">{{$reserve->compName}} at : {{$reserve->time}}</a> </div>
+                        @endforeach
                         <hr class="m-2 "/>
                         <div class="text-start sidebar-custom-item p-1"><a href="#">Activity Log</a> </div>
                         <hr class="m-2 "/>

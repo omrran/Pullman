@@ -49,6 +49,7 @@ function blockPassenger(pass_id, row_id) {
 }
 
 function unBlockPassenger(pass_id, row_id) {
+
     const xhttp = new XMLHttpRequest();
     let row = document.getElementById(row_id);
     xhttp.onreadystatechange = function () {
@@ -125,7 +126,42 @@ function showfilterItems(id) {
     listClasses.contains("d-none") ? element.classList.remove("d-none") : element.classList.add("d-none");
 
 }
-function hide(id){
+
+function hide(id) {
     document.getElementById(id).style.display = 'none';
+}
+
+function reserveASeat(tripId, button) {
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function () {
+        console.log(xhttp.readyState);
+
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            console.log('xhttp.responseText');
+            console.log('xhttp.responseText');
+            console.log(JSON.parse(xhttp.responseText));
+            if (JSON.parse(xhttp.responseText).res === true) {
+                button.innerText = "done"
+            } else if (JSON.parse(xhttp.responseText).res === false) {
+                button.innerText = "there are no seats in this trip";
+            } else {
+                button.innerText = JSON.parse(xhttp.responseText).res;
+            }
+
+        }
+    };
+    xhttp.open(
+        "GET",
+        "http://127.0.0.1:8000/passenger-profile/reserve-seat/" + tripId,
+        true
+    );
+    xhttp.send();
+}
+function showEditProfile(id){
+    console.log(document.getElementById('editprofile'+id).style.display);
+    document.getElementById('editprofile'+id).classList.remove('d-none');
+    document.getElementById('editprofile'+id).classList.add('d-flex');
+
 }
 

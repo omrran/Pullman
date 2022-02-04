@@ -82,6 +82,11 @@ Route::group(['prefix' => 'company-profile', 'middleware' => 'checkAuthCompany']
     Route::post('/save-post', [MainController::class, 'savePost']);
     Route::get('/news', [MainController::class, 'news']);
     Route::post('/edit-trip', [MainController::class, 'editTrip']);
+
+    Route::get('/view-profile', [MainController::class, 'viewProfile']);
+    Route::get('/edit-profile', [MainController::class, 'editProfile']);
+    Route::post('/save-new-profile-info', [MainController::class, 'saveNewProfileInfo']);
+
     Route::get('/log-out-comp', [MainController::class, 'logOutComp']);
 
 
@@ -92,7 +97,14 @@ Route::group(['prefix' => 'passenger-profile', 'middleware' => 'checkAuthPasseng
     Route::get('/write-post', [MainController::class, 'writePostPassenger']);
     Route::post('/save-post', [MainController::class, 'savePost']);
     Route::get('/news', [MainController::class, 'passengerNews']);
+    Route::get('/trip/{idTrip}', [MainController::class, 'showATrip']);
+    Route::get('/view-profile', [MainController::class, 'viewProfile']);
+    Route::get('/edit-profile', [MainController::class, 'editProfile']);
+    Route::post('/save-new-profile-info', [MainController::class, 'saveNewProfileInfo']);
     Route::get('/log-out-pass', [MainController::class, 'logOutPass']);
+
+    //this routes used in AJAX calls in Public/js/code.js file ;
+    Route::get('/reserve-seat/{idTrip}', [MainController::class, 'reserveASeat']);
 
 });
 

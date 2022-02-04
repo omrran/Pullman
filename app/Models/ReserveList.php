@@ -13,6 +13,8 @@ class ReserveList extends Model
         'id',
         'passId',
         'tripId',
+        'compName',
+        'time',
         'created_at',
         'updated_at',
     ];

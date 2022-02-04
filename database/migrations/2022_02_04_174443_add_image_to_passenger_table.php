@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ReserveList extends Migration
+class AddImageToPassengerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,8 @@ class ReserveList extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'reserveList', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('passId');
-            $table->integer('tripId');
-            $table->string('compName',25);
-            $table->string('time',25);
-            $table->timestamps();
+        Schema::table('passenger', function (Blueprint $table) {
+            $table->string('imagePath');
         });
     }
 
@@ -31,6 +25,8 @@ class ReserveList extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('passenger', function (Blueprint $table) {
+            $table->dropColumn('imagePath');
+        });
     }
 }

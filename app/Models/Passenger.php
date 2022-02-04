@@ -18,6 +18,7 @@ class Passenger extends Model
         'idn',
         'password',
         'status',
+        'imagePath',
         'created_at',
         'updated_at'
     ];

@@ -20,7 +20,8 @@
     </div>
     @if(\Illuminate\Support\Facades\Session::has('LoggedPassenger'))
     <hr class="m-0">
-    <div type="button" onclick=""
+    <div type="button"
+         onclick="reserveASeat({{$id}},this)"
          class="btn btn-warning  mt-1 p-0 w-100 text-white">
         Reserve  A Seat
     </div>

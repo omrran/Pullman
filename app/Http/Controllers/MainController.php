@@ -7,6 +7,7 @@ use App\Models\CompanyPost;
 use App\Models\Passenger;
 use App\Models\PassengerPost;
 use App\Models\Post;
+use App\Models\ReserveList;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -146,6 +147,7 @@ class MainController extends Controller
             } elseif (!Hash::check($request->password, $comp->password)) {
                 return redirect()->back()->with(['PasswordFailed' => 'Wrong Password !']);
             }
+//            Session::forget('LoggedPassenger');//log out passenger login if it exist;
             Session::put('LoggedCompany', $comp->id);
             return redirect('/company-profile');
 
@@ -178,6 +180,7 @@ class MainController extends Controller
 
         if (!is_null($pass)) {
             if (Hash::check($request->password, $pass->password)) {
+//                Session::forget('LoggedCompany');
                 Session::put('LoggedPassenger', $pass->id);
                 return redirect('/passenger-profile');
             } else {
@@ -212,8 +215,9 @@ class MainController extends Controller
     {
         if (Session::has('LoggedPassenger')) {
             $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
+            $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
 
-            return view('passenger/passengerProfile', ['passenger' => $passenger]);
+            return view('passenger/passengerProfile', ['passenger' => $passenger, 'myReservations' => $myReservations]);
         }
 
     }
@@ -440,7 +444,9 @@ class MainController extends Controller
     public function writePostPassenger()
     {
         $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
-        return view('passenger/writePostPassenger', ['passenger' => $passenger]);
+        $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+
+        return view('passenger/writePostPassenger', ['passenger' => $passenger, 'myReservations' => $myReservations]);
     }
 
     public function savePost(Request $request)
@@ -463,11 +469,11 @@ class MainController extends Controller
     public function news()
     {
 
-         $company = Company::where('id', Session::get('LoggedCompany'))->first();
+        $company = Company::where('id', Session::get('LoggedCompany'))->first();
         $openTrips = Trip::with('company')->where('status', 'open')
             ->orderBy('created_at', 'desc')->get();
         $companyPosts = CompanyPost::with('company')->orderBy('created_at', 'desc')->get();
-          $passengerPosts = PassengerPost::with('passenger')->orderBy('created_at', 'desc')->get();
+        $passengerPosts = PassengerPost::with('passenger')->orderBy('created_at', 'desc')->get();
 
         return view('company-news', [
             'company' => $company,
@@ -476,19 +482,24 @@ class MainController extends Controller
             'companyPosts' => $companyPosts,
         ]);
     }
+
     public function passengerNews()
     {
         $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
-         $openTrips = Trip::with('company')->where('status', 'open')
+        $openTrips = Trip::with('company')->where('status', 'open')
             ->orderBy('created_at', 'desc')->get();
         $companyPosts = CompanyPost::with('company')->orderBy('created_at', 'desc')->get();
         $passengerPosts = PassengerPost::with('passenger')->orderBy('created_at', 'desc')->get();
+
+        $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+
 
         return view('passenger/passenger-news', [
             'passenger' => $passenger,
             'openTrips' => $openTrips,
             'passengerPosts' => $passengerPosts,
             'companyPosts' => $companyPosts,
+            'myReservations' => $myReservations
         ]);
     }
 
@@ -517,9 +528,131 @@ class MainController extends Controller
         return view('companies', compact('companies'));
     }
 
-    public function reserveASeat($passId, $tripId)
+    public function reserveASeat($tripId)
+    {
+        $trip = Trip::with('company')->where('id', $tripId)->first();
+        $re = ReserveList::where('passId', Session::get('LoggedPassenger'))->where('tripId', $tripId)->get();
+
+        if ($trip->numSeats == 0) {
+            return response()->json([
+                'res' => false
+            ]);
+        }
+        if (count($re) != 0) {
+            return response()->json([
+                'res' => 'you already reserve a seat in this trip'
+            ]);
+        } else if (count($re) == 0) {
+            $result = DB::transaction(function () use ($tripId, $trip) {
+                ReserveList::create([
+                    'tripId' => $tripId,
+                    'passId' => Session::get('LoggedPassenger'),
+                    'compName' => $trip->company->compName,
+                    'time' => $trip->time
+                ]);
+
+                $trip->numSeats--;
+                $trip->save();
+                return true;
+            });
+
+            return response()->json([
+                'res' => $result
+            ]);
+
+        }
+
+    }
+
+    public function showATrip($tripId)
+    {
+        $trip = Trip::with('company')->where('id', $tripId)->first();
+        $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+        $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
+        return view('passenger/showATrip', [
+            'trip' => $trip,
+            'myReservations' => $myReservations,
+            'passenger' => $passenger,
+        ]);
+
+    }
+
+    public function viewProfile()
+    {
+        $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+        $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
+        return view('passenger/viewProfile', [
+                'myReservations' => $myReservations,
+                'passenger' => $passenger
+            ]
+        );
+    }
+
+    public function editProfile()
+    {
+        $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+        $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
+        return view('passenger/editPassengerProfile', [
+                'myReservations' => $myReservations,
+                'passenger' => $passenger
+            ]
+        );
+    }
+
+    public function saveNewProfileInfo(Request $request)
     {
 
+//        $test = $request->photo->guessExtension();
+//        $test = $request->photo->getMimeType();
+//        $test = $request->file('photo')->getMimeType();
+
+        $rules = [
+            'fName' => 'regex:/^([^0-9]*)$/ | nullable',
+            'lName' => 'regex:/^([^0-9]*)$/| nullable',
+            'phone' => 'numeric| nullable',
+            'idn' => 'numeric| nullable ',
+            'photo' => 'mimes:jpg,png,jpeg |max:5048' //specify file extension and size ;
+        ];
+
+        $validate = Validator::make($request->all(), $rules);
+
+        if ($validate->fails()) return redirect()->back()->withErrors($validate);
+
+        $pass_info = Passenger::where('id', Session::get('LoggedPassenger'))->first();
+
+        //Make sure that the chosen phone number is unique
+        $another_pass = Passenger::where('id', '!=', Session::get('LoggedPassenger'))
+            ->where('phone', $request->phone)->first();
+        if (!is_null($another_pass)) {
+            return redirect('/passenger-profile/view-profile')->with(['failed_phone' => 'This phone belongs to someone else.']);
+        }
+        //Make sure that the chosen idn number is unique
+        $another_pass2 = Passenger::where('id', '!=', Session::get('LoggedPassenger'))
+            ->where('idn', $request->idn)->first();
+        if (!is_null($another_pass2)) {
+            return redirect('/passenger-profile/view-profile')->with(['failed_idn' => 'This IDN belongs to someone else.']);
+        }
+
+        //Work on putting a name for the image and store it somewhere
+        if (!is_null($request->photo)) {
+            $file_extension = $request->photo->getClientOriginalExtension();
+            $file_name = $request->photo->getClientOriginalName();
+            $request->photo->move(Public_path('photos'), $file_name);
+
+        }
+        //restore new data
+        $pass_info->fName = is_null($request->fName) ? $pass_info->fName : $request->fName;
+        $pass_info->lName = is_null($request->lName) ? $pass_info->lName : $request->lName;
+        $pass_info->phone = is_null($request->phone) ? $pass_info->phone : $request->phone;
+        $pass_info->idn = is_null($request->idn) ? $pass_info->idn : $request->idn;
+        $pass_info->idn = is_null($request->idn) ? $pass_info->idn : $request->idn;
+        $pass_info->imagePath = is_null($request->photo) ? $pass_info->imagePath : $file_name;
+        $pass_info->save();
+
+//        return Passenger::where('id', Session::get('LoggedPassenger'))->first();
+
+
+        return redirect('/passenger-profile/view-profile')->with(['pass_profile_edit_done' => 'Your data has been modified successfully']);
     }
 
 }
