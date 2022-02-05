@@ -1,4 +1,4 @@
-@extends('companyProfile')
+@extends('company.companyProfile')
 
 @section('main content')
 

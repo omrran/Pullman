@@ -1,10 +1,10 @@
 <div id="" class="bg-body  p-2 w-75  m-2 border rounded-3 mx-auto">
     <div class="d-flex justify-content-start  bg-white p-1 rounded-border-post-header-custom">
-        <img class="float-start rounded-circle " src="{{asset('photos/admin.png')}}"
+        <img class="float-start rounded-circle " src="{{asset('photos/'.$companyImage)}}"
              style="width: 50px;height: 50px" alt="">
         <div class="d-flex flex-column ">
             <h5 class="p-2 pb-0 mb-0 text-start">{{$companyName}}</h5>
-            <small class="px-1">{{$time}}</small>
+            <small class="px-1">{{$creationDate}}</small>
         </div>
     </div>
     <h5 class="text-start text-primary">

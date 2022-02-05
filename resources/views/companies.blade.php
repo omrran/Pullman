@@ -14,7 +14,7 @@
     <x-navbar/>
     <div class="d-flex justify-content-center">
         @foreach($companies as $company)
-        <x-company photo="" name="{{$company->compName}}" address="{{$company->address}}" telephone="{{$company->telephone}}"/>
+        <x-company photo="{{$company->imagePath}}" name="{{$company->compName}}" address="{{$company->address}}" telephone="{{$company->telephone}}"/>
         @endforeach
     </div>
 

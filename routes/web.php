@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\PassengerController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
@@ -29,7 +31,7 @@ Route::get('/login-admin', function () {
 })->middleware('alreadyLoggedIn');
 
 Route::get('/login-company', function () {
-    return view('loginCompany');
+    return view('company.loginCompany');
 })->middleware('alreadyLoggedIn');
 
 Route::get('/login-passenger', function () {
@@ -38,8 +40,9 @@ Route::get('/login-passenger', function () {
 
 
 Route::get('/joinUs-company', function () {
-    return view('joinusCompany');
+    return view('company.joinusCompany');
 })->middleware('alreadyLoggedIn');
+
 Route::get('/joinUs-passenger', function () {
     return view('passenger/joinusPassenger'); // passenger.joinusPassenger  also work
 })->middleware('alreadyLoggedIn');
@@ -47,11 +50,11 @@ Route::get('/joinUs-passenger', function () {
 
 Route::get('/companies', [MainController::class, 'getCompanies']);
 
-Route::post('/join-company', [MainController::class, 'joinCompany']);
-Route::post('/join-passenger', [MainController::class, 'joinPassenger']);
+Route::post('/join-company', [CompanyController::class, 'joinCompany']);
+Route::post('/join-passenger', [PassengerController::class, 'joinPassenger']);
 
-Route::post('/company-page', [MainController::class, 'checkCompanyLogin']);
-Route::post('/passenger-page', [MainController::class, 'checkPassengerLogin']);
+Route::post('/company-page', [CompanyController::class, 'checkCompanyLogin']);
+Route::post('/passenger-page', [PassengerController::class, 'checkPassengerLogin']);
 Route::post('/admin-page', [MainController::class, 'checkAdminLogin']);
 
 
@@ -73,35 +76,35 @@ Route::group(['prefix' => 'admin-profile', 'middleware' => 'checkAuthAdmin'], fu
 });
 
 Route::group(['prefix' => 'company-profile', 'middleware' => 'checkAuthCompany'], function () {
-    Route::get('/', [MainController::class, 'companyProfile']);
-    Route::get('/trip-form', [MainController::class, 'getTripForm']);
-    Route::post('/add-trip', [MainController::class, 'addTrip']);
-    Route::get('/old-trips', [MainController::class, 'oldTrips']);
-    Route::post('/old-trips-filter/', [MainController::class, 'oldFilteredTrips']);
-    Route::get('/write-post', [MainController::class, 'writePost']);
-    Route::post('/save-post', [MainController::class, 'savePost']);
-    Route::get('/news', [MainController::class, 'news']);
-    Route::post('/edit-trip', [MainController::class, 'editTrip']);
+    Route::get('/', [CompanyController::class, 'companyProfile']);
+    Route::get('/trip-form', [CompanyController::class, 'getTripForm']);
+    Route::post('/add-trip', [CompanyController::class, 'addTrip']);
+    Route::get('/old-trips', [CompanyController::class, 'oldTrips']);
+    Route::post('/old-trips-filter/', [CompanyController::class, 'oldFilteredTrips']);
+    Route::get('/write-post', [CompanyController::class, 'writePost']);
+    Route::post('/save-post', [CompanyController::class, 'savePost']);
+    Route::get('/news', [CompanyController::class, 'news']);
+    Route::post('/edit-trip', [CompanyController::class, 'editTrip']);
 
-    Route::get('/view-profile', [MainController::class, 'viewProfile']);
-    Route::get('/edit-profile', [MainController::class, 'editProfile']);
-    Route::post('/save-new-profile-info', [MainController::class, 'saveNewProfileInfo']);
+    Route::get('/view-profile', [CompanyController::class, 'viewProfile']);
+    Route::get('/edit-profile', [CompanyController::class, 'editProfile']);
+    Route::post('/save-new-profile-info', [CompanyController::class, 'saveNewProfileInfo']);
 
-    Route::get('/log-out-comp', [MainController::class, 'logOutComp']);
+    Route::get('/log-out-comp', [CompanyController::class, 'logOutComp']);
 
 
 });
 
 Route::group(['prefix' => 'passenger-profile', 'middleware' => 'checkAuthPassenger'], function () {
-    Route::get('/', [MainController::class, 'passengerProfile']);
-    Route::get('/write-post', [MainController::class, 'writePostPassenger']);
-    Route::post('/save-post', [MainController::class, 'savePost']);
-    Route::get('/news', [MainController::class, 'passengerNews']);
-    Route::get('/trip/{idTrip}', [MainController::class, 'showATrip']);
-    Route::get('/view-profile', [MainController::class, 'viewProfile']);
-    Route::get('/edit-profile', [MainController::class, 'editProfile']);
-    Route::post('/save-new-profile-info', [MainController::class, 'saveNewProfileInfo']);
-    Route::get('/log-out-pass', [MainController::class, 'logOutPass']);
+    Route::get('/', [PassengerController::class, 'passengerProfile']);
+    Route::get('/write-post', [PassengerController::class, 'writePostPassenger']);
+    Route::post('/save-post', [PassengerController::class, 'savePost']);
+    Route::get('/news', [PassengerController::class, 'passengerNews']);
+    Route::get('/trip/{idTrip}', [PassengerController::class, 'showATrip']);
+    Route::get('/view-profile', [PassengerController::class, 'viewProfile']);
+    Route::get('/edit-profile', [PassengerController::class, 'editProfile']);
+    Route::post('/save-new-profile-info', [PassengerController::class, 'saveNewProfileInfo']);
+    Route::get('/log-out-pass', [PassengerController::class, 'logOutPass']);
 
     //this routes used in AJAX calls in Public/js/code.js file ;
     Route::get('/reserve-seat/{idTrip}', [MainController::class, 'reserveASeat']);

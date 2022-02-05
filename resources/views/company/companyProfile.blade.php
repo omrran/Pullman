@@ -38,10 +38,11 @@
                     class="p-2  d-flex flex-column justify-content-start border border-secondary border-custom-side d-flex flex-column justify-content-start bg-body">
                     <div class="d-flex flex-column ">
                         <img width="125" height="125" class="rounded-circle img-thumbnail m-auto"
-                             src="{{asset('photos/111.jpg')}}">
+                             src="{{asset('photos/'.$company->imagePath)}}">
                         <h5>{{$company->compName}}</h5>
                     </div>
-                    <div class=" border border-secondary m-auto  rounded-pill view-custom-pro  px-5"><a href="#">view
+                    <div class=" border border-secondary m-auto  rounded-pill view-custom-pro  px-5">
+                        <a href="/company-profile/view-profile">view
                             profile</a></div>
                     <hr class="m-2 "/>
                     <div class="text-start sidebar-custom-item p-1"><a href="#">Activity Log</a></div>

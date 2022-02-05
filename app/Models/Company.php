@@ -17,6 +17,7 @@ class Company extends Model
         'address',
         'password',
         'status',
+        'imagePath',
         'created_at',
         'updated_at'
     ];

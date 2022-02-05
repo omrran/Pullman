@@ -1,4 +1,4 @@
-@extends('companyProfile')
+@extends('company.companyProfile')
 
 @section('main content')
 
@@ -15,25 +15,26 @@
                 numSeats="{{$trip->numSeats}}"
                 price="{{$trip->priceASeat}}"
                 time="{{$trip->time}}"
+                creationDate="{{$trip->created_at}}"
                 companyName="{{$trip->company->compName}}"
+                companyImage="{{$trip->company->imagePath}}"
             />
         @endforeach
 
         @foreach($companyPosts as $post)
             <x-post postContent="{{$post->content}}"
-                    companyName="{{$post->company->compName}}"
+                    publisherName="{{$post->company->compName}}"
+                    publisherImage="{{$post->company->imagePath}}"
                     postTime="{{$post->created_at}}"
             />
         @endforeach
 
         @foreach($passengerPosts as $post)
             <x-post postContent="{{$post->content}}"
-                    companyName="{{$post->passenger->fName}}"
+                    publisherName="{{$post->passenger->fName}} {{$post->passenger->lName}}"
+                    publisherImage="{{$post->passenger->imagePath}}"
                     postTime="{{$post->created_at}}"/>
         @endforeach
-
-
-
 
 
     </div>

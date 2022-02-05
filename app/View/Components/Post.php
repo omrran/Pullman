@@ -11,7 +11,11 @@ class Post extends Component
      *
      * @return void
      */
-    public function __construct(public $postContent , public $companyName , public $postTime)
+    public function __construct(public $postContent ,
+                                public $publisherName ,
+                                public $publisherImage,
+                                public $postTime
+    )
     {
 
     }

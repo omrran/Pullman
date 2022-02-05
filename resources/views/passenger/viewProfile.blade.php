@@ -19,7 +19,6 @@
 
     <div class="w-95 bg-custom-gray mx-auto p-1 d-flex rounded-3 mt-3">
         <div class="w-25  p-1 pt-2 bg-secondary " style="border-radius: 0 80px 0 0 ">
-{{--            <img width="150" height="150"  class="rounded-circle " src="{{asset('photos/111.jpg')}}">--}}
             <img width="150" height="150"  class="rounded-circle " src="{{asset('photos/'.$passenger->imagePath)}}">
         </div>
         <div class="w-75  text-start p-3 ">

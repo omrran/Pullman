@@ -10,7 +10,7 @@
                 <p class="text-start m-2"><strong>ID</strong>  : {{$Comp->id}}</p>
                 <p class="text-start m-2"><strong>Email</strong>  : {{$Comp->email}}</p>
                 <p class="text-start m-2"><strong>Telephone</strong> : {{$Comp->telephone}}</p>
-                <p class="text-start m-2"><strong>Address</strong> : {{$Comp->email}}</p>
+                <p class="text-start m-2"><strong>Address</strong> : {{$Comp->address}}</p>
                 <hr class="m-0">
                 @if($Comp->status == 'unblocked')
                     <div type="button" class="btn btn-warning float-end mt-1" >

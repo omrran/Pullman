@@ -12,7 +12,7 @@
             <p class="text-start m-2"><strong>ID</strong>  : {{$pendingComp->id}}</p>
             <p class="text-start m-2"><strong>Email</strong>  : {{$pendingComp->email}}</p>
             <p class="text-start m-2"><strong>Telephone</strong> : {{$pendingComp->telephone}}</p>
-            <p class="text-start m-2"><strong>Address</strong> : {{$pendingComp->email}}</p>
+            <p class="text-start m-2"><strong>Address</strong> : {{$pendingComp->address}}</p>
             <hr class="m-0">
             <button type="button" class="btn btn-primary float-end mt-1"  onclick="activateCompAccount({{$pendingComp->id}})">Activate Account</button>
 

@@ -7,7 +7,7 @@
 </div> --}}
 
 <div class="card bg-secondary m-3" style="width: 18rem;">
-    <img src="{{asset('photos/logo.png')}}" class="card-img-top img-thumbnail" alt="...">
+    <img src="{{asset('photos/'.$photo)}}" class="card-img-top img-thumbnail"  alt="...">
     <div class="card-body">
       <h5 class="card-title">{{$name}}</h5>
       <p class="card-text">Address :{{$address}}</p>

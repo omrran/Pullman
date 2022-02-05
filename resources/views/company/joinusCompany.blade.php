@@ -15,11 +15,11 @@
     {{-- @if(Session::has('EmailFailed'))--}}
     {{-- <h1>{{Session::get('EmailFailed')}}</h1>--}}
     {{-- @endif--}}
-    {{-- <div id="titleForm" class="title-form">Company</div>--}}
+    {{-- <div id="titleForm" class="title-form">CompanyController</div>--}}
 
     {{-- <form id="company" action="{{url('/join-company')}}" method="POST">--}}
         {{-- @csrf--}}
-        {{-- <label>Company Name</label>--}}
+        {{-- <label>CompanyController Name</label>--}}
         {{-- @error('compName')--}}
         {{-- <small id="compNameError" class="error">{{$message}}</small>--}}
         {{-- @enderror--}}

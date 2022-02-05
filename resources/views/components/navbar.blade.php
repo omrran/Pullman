@@ -12,9 +12,25 @@
         </button>
         <div class="collapse navbar-collapse " id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
-                <li class="nav-item px-3">
-                    <a class="nav-link fs-5" aria-current="page" href="/home"><i class="fa fa-home fs-5"></i> Home</a>
-                </li>
+
+                @if(Session::has('LoggedCompany'))
+                    <li class="nav-item px-3">
+                        <a class="nav-link fs-5" aria-current="page" href="/company-profile"><i
+                                class="fa fa-home fs-5"></i> Company Profile</a>
+                    </li>
+                @elseif(Session::has('LoggedPassenger'))
+                    <li class="nav-item px-3">
+                        <a class="nav-link fs-5" aria-current="page" href="/passenger-profile"><i
+                                class="fa fa-home fs-5"></i>Passenger Profile</a>
+                    </li>
+                @else
+                    <li class="nav-item px-3">
+                        <a class="nav-link fs-5" aria-current="page" href="/home"><i class="fa fa-home fs-5"></i>
+                            Home</a>
+                    </li>
+                @endif
+
+
                 <li class="nav-item px-3">
                     <a class="nav-link fs-5" aria-current="page" href="/whatpullman">what's PULLMAN <i
                             class="fa fa-question fs-3"></i></a>

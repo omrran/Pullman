@@ -12,7 +12,7 @@
         @foreach($passengers as $passenger)
         <tr id="row{{$passenger->id}}">
             <td onclick="toggleImgSize('img{{$passenger->id}}')" class="mouse-custom-hover d-flex justify-content-start" title="Click to make image bigger">
-                <img id="img{{$passenger->id}}" class="float-start rounded-circle animation-custom-img" src="{{asset('photos/admin.png')}}" style="width: 50px;height: 50px"  alt="">
+                <img id="img{{$passenger->id}}" class="float-start rounded-circle animation-custom-img" src="{{asset('photos/'.$passenger->imagePath)}}" style="width: 50px;height: 50px"  alt="">
                 <p id="name{{$passenger->id}}" class="float-start px-2">{{$passenger->fName}} {{$passenger->lName}}</p>
             </td>
             <td id="phone{{$passenger->id}}">{{$passenger->phone}}</td>

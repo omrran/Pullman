@@ -17,7 +17,9 @@ class Trip extends Component
                                 public $numSeats ,
                                 public $price ,
                                 public $time ,
+                                public $creationDate ,
                                 public $companyName ,
+                                public $companyImage ,
     )
     {
         //

@@ -1,4 +1,4 @@
-@extends('companyProfile')
+@extends('company.companyProfile')
 
 @section('main content')
     @if(count($trips)==0)
@@ -36,7 +36,6 @@
                     <option value="der-zor">Der-zor</option>
                     <option value="hasaka">Hasaka</option>
                     <option value="raqa">Raqa</option>
-
                 </select>
                 <span>To :</span>
                 <select name="to" class="form-select form-select-sm w-25 d-inline"
@@ -112,20 +111,42 @@
                            name="id"
                     /><br>
                     <strong>From<span style="visibility:hidden ">cccccc</span>:</strong>
-                    <input type="text"
-                           value="{{$trip->from}}"
-                           class="form-control w-50 mb-1"
-                           style="display: inline"
-                           name="from"
-                    /><br>
+                    <select name="from" class="form-select form-select-sm w-50 d-inline"
+                            aria-label=".form-select-sm example" >
+                        <option selected value="{{$trip->from}}">{{ucfirst($trip->from)}} </option>
+                        <option value="damascus">Damascus</option>
+                        <option value="aleppo">Aleppo</option>
+                        <option value="hama">Hama</option>
+                        <option value="homs">Homs</option>
+                        <option value="idlib">Idlib</option>
+                        <option value="qounaitera">Qounaitera</option>
+                        <option value="daraa">Daraa</option>
+                        <option value="latakia">latakia</option>
+                        <option value="tartous">Tartous</option>
+                        <option value="al-souaidaa">al-souaidaa</option>
+                        <option value="der-zor">Der-zor</option>
+                        <option value="hasaka">Hasaka</option>
+                        <option value="raqa">Raqa</option>
+                    </select><br>
 
                     <strong>To<span style="visibility:hidden ">ccccccccc</span>:</strong>
-                    <input type="text"
-                           value="{{$trip->to}}"
-                           class="form-control w-50 mb-1"
-                           style="display: inline"
-                           name="to"
-                    /><br>
+                    <select name="to" class="form-select form-select-sm w-50 d-inline"
+                            aria-label=".form-select-sm example" >
+                        <option selected value="{{$trip->to}}">{{ucfirst($trip->to)}} </option>
+                        <option value="damascus">Damascus</option>
+                        <option value="aleppo">Aleppo</option>
+                        <option value="hama">Hama</option>
+                        <option value="homs">Homs</option>
+                        <option value="idlib">Idlib</option>
+                        <option value="qounaitera">Qounaitera</option>
+                        <option value="daraa">Daraa</option>
+                        <option value="latakia">latakia</option>
+                        <option value="tartous">Tartous</option>
+                        <option value="al-souaidaa">al-souaidaa</option>
+                        <option value="der-zor">Der-zor</option>
+                        <option value="hasaka">Hasaka</option>
+                        <option value="raqa">Raqa</option>
+                    </select><br>
 
                     <strong>Num Seats :</strong>
                     <input type="number"

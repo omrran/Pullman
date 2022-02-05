@@ -1,9 +1,9 @@
 <div class="w-75 mt-1 mb-1 mx-auto">
     <div class="d-flex justify-content-start  bg-white p-1 rounded-border-post-header-custom">
-        <img class="float-start rounded-circle " src="{{asset('photos/admin.png')}}"
+        <img class="float-start rounded-circle " src="{{asset('photos/'.$publisherImage)}}"
              style="width: 50px;height: 50px" alt="">
         <div class="d-flex flex-column text-start">
-            <h5 class="p-2 pb-0 mb-0">{{$companyName}}</h5>
+            <h5 class="p-2 pb-0 mb-0">{{$publisherName}}</h5>
             <small class="px-1">{{$postTime}}</small>
         </div>
     </div>
