@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\addNewPost;
+use App\Events\addNewTrip;
 use App\Models\Company;
 use App\Models\CompanyPost;
+use App\Models\EventLog;
+use App\Models\Passenger;
 use App\Models\PassengerPost;
 use App\Models\ReserveList;
 use App\Models\Trip;
+use App\Traits\Constants;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -14,18 +19,11 @@ use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
-    const COMPANY_STATUS = [
-        'PENDING' => 'pending',
-        'BLOCKED' => 'blocked',
-        'UNBLOCKED' => 'unblocked'
-    ];
-    //this value is used in oldTrips.blade.php
-    const TRIP_STATUS = [
-        'OPEN' => 'open',
-        'CLOSED' => 'closed',
-        'GONE' => 'gone'
-    ];
+
+
+    //default image name for new company
     const IMAGE_NAME = 'company_account.jpg';
+
     public function checkCompanyLogin(Request $request)
     {
         $rules = [
@@ -46,7 +44,7 @@ class CompanyController extends Controller
         $comp = Company::where('email', $request->email)->first();
 
         if (!is_null($comp)) {
-            if ($comp->status == self::COMPANY_STATUS['PENDING']) {
+            if ($comp->status == Constants::COMPANY_STATUS['PENDING']) {
                 return redirect()->back()->with(['pendingAccount' => 'you account still pending....! ']);
             } elseif (!Hash::check($request->password, $comp->password)) {
                 return redirect()->back()->with(['PasswordFailed' => 'Wrong Password !']);
@@ -62,6 +60,7 @@ class CompanyController extends Controller
         }
 
     }
+
     public function joinCompany(Request $request)
     {
         $rules = [
@@ -81,7 +80,7 @@ class CompanyController extends Controller
         ];
 
 
-        $validate = Validator::make($request->all(), $rules,$massages);
+        $validate = Validator::make($request->all(), $rules, $massages);
 
         if ($validate->fails()) return redirect()->back()->withErrors($validate);
 
@@ -91,12 +90,13 @@ class CompanyController extends Controller
             'email' => $request->email,
             'telephone' => $request->telephone,
             'address' => $request->address,
-            'imagePath' => self::IMAGE_NAME,
-            'status' => self::COMPANY_STATUS['PENDING'],
+            'imagePath' => Constants::IMAGE_NAME,
+            'status' => Constants::COMPANY_STATUS['PENDING'],
             'password' => Hash::make($request->password),
         ]);
         return redirect('/login-company')->with(['Success' => 'your register is done']);
     }
+
     public function companyProfile()
     {
         if (Session::has('LoggedCompany')) {
@@ -104,6 +104,7 @@ class CompanyController extends Controller
             return view('company.companyProfile', compact('company'));
         }
     }
+
     public function getTripForm()
     {
         if (Session::has('LoggedCompany')) {
@@ -111,6 +112,7 @@ class CompanyController extends Controller
             return view('company.tripForm', compact('company'));
         }
     }
+
     public function filter($fullData, $condition)
     {
         $result = [];
@@ -137,8 +139,13 @@ class CompanyController extends Controller
         }
         return $result;
     }
+
     public function addTrip(Request $request)
     {
+        //check if the account is blocked or not
+        if (Company::select('status')->where('id', Session::get('LoggedCompany'))->first()->status == Constants::COMPANY_STATUS['BLOCKED']) {
+            return redirect()->back()->with(['addTripFailed' => 'your Account is Blocked']);
+        }
         //validate :
         $rules = [
             'from' => 'required ',
@@ -164,8 +171,17 @@ class CompanyController extends Controller
             'numSeats' => $request->numSeats,
             'time' => $request->time,
             'priceASeat' => $request->priceASeat,
-            'status' => self::TRIP_STATUS['OPEN'],
+            'status' => Constants::TRIP_STATUS['OPEN'],
         ])->id;
+
+        //register A log:
+        event(new addNewTrip(
+            Constants::EVENT_TYPE['NEW_TRIP'],
+            Constants::ACTOR_TYPE['COMPANY'],
+            Session::get('LoggedCompany'),
+            Constants::OBJECT_TYPE['TRIP'],
+            $idTrip
+        ));
 
         if ($idTrip) {
             return redirect()->back()->with(['addTripDone' => 'you have been added trip with id : ' . $idTrip . ' successfully']);
@@ -174,6 +190,7 @@ class CompanyController extends Controller
 
         }
     }
+
     public function oldTrips()
     {
         $company = Company::where('id', Session::get('LoggedCompany'))->first();
@@ -182,6 +199,7 @@ class CompanyController extends Controller
         return view('company.oldTrips', ['company' => $company, 'trips' => $trips]);
 
     }
+
     public function oldFilteredTrips(Request $request)
     {
         $company = Company::where('id', Session::get('LoggedCompany'))->first();
@@ -191,18 +209,35 @@ class CompanyController extends Controller
         $filtersTrips = $this->filter($trips, $request->all());
         return view('company.oldTrips', ['company' => $company, 'trips' => $filtersTrips]);
     }
+
     public function writePost()
     {
         $company = Company::where('id', Session::get('LoggedCompany'))->first();
         return view('company.writePost', ['company' => $company]);
     }
+
     public function savePost(Request $request)
     {
+        //check if the account is Blocked
+        if (Company::select('status')->where('id', Session::get('LoggedCompany'))->first()->status == Constants::COMPANY_STATUS['BLOCKED']) {
+            return redirect()->back()->with(['writePostFailed' => 'your Account is Blocked']);
+        }
+
         if (trim($request->all()['post']) == "") {
             return redirect()->back();
         }
         if (Session::has('LoggedCompany')) {
-            CompanyPost::create(['compId' => Session::get('LoggedCompany'), 'content' => $request->post]);
+            $idPost = CompanyPost::create(['compId' => Session::get('LoggedCompany'), 'content' => $request->post])->id;
+
+            //register A log:
+            event(new addNewPost(
+                Constants::EVENT_TYPE['NEW_POST'],
+                Constants::ACTOR_TYPE['COMPANY'],
+                Session::get('LoggedCompany'),
+                Constants::OBJECT_TYPE['POST'],
+                $idPost
+            ));
+
             return redirect('/company-profile/news');
         }
 
@@ -212,6 +247,7 @@ class CompanyController extends Controller
         }
 
     }
+
     public function news()
     {
 
@@ -228,6 +264,7 @@ class CompanyController extends Controller
             'companyPosts' => $companyPosts,
         ]);
     }
+
     public function editTrip(Request $request)
     {
         $trip = Trip::where('id', $request->id)->first();
@@ -256,9 +293,10 @@ class CompanyController extends Controller
         );
 
     }
+
     public function editProfile()
     {
-        $company = \App\Models\Company::where('id', Session::get('LoggedCompany'))->first();
+        $company = Company::where('id', Session::get('LoggedCompany'))->first();
         return view('company/editCompanyProfile', [
                 'company' => $company
             ]
@@ -266,6 +304,7 @@ class CompanyController extends Controller
 
 
     }
+
     public function saveNewProfileInfo(Request $request)
     {
         $rules = [
@@ -299,7 +338,7 @@ class CompanyController extends Controller
         //Work on putting a name for the image and store it somewhere
         if (!is_null($request->imagePath)) {
             $file_extension = $request->imagePath->getClientOriginalExtension();
-            $file_name = time().$request->imagePath->getClientOriginalName();
+            $file_name = time() . $request->imagePath->getClientOriginalName();
             $request->imagePath->move(Public_path('photos'), $file_name);
 
         }
@@ -314,6 +353,19 @@ class CompanyController extends Controller
 
         return redirect('/company-profile/view-profile')->with(['comp_profile_edit_done' => 'Your data has been modified successfully']);
     }
+
+    public function activityLog()
+    {
+        $company = Company::where('id', Session::get('LoggedCompany'))->first();
+        $myLogs = EventLog::where('actorType', Constants::ACTOR_TYPE['COMPANY'])
+            ->where('actorId', Session::get('LoggedCompany'))->get();
+        for ($i = 0; $i < count($myLogs); $i++) {
+            $n = Company::where('id', $myLogs[$i]->actorId)->first();
+            $myLogs[$i]->actorType .= ' ' . $n->compName;
+        }
+        return view('company/companyLog', ['company' => $company, 'myLogs' => $myLogs]);
+    }
+
     public function logOutComp()
     {
         Session::forget(['LoggedCompany']);

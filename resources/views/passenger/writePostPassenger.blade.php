@@ -1,7 +1,9 @@
 @extends('passenger.passengerProfile')
 
 @section('main content')
-
+    @if(\Illuminate\Support\Facades\Session::has('writePostFailed'))
+        <div class="alert alert-warning">{{Session::get('writePostFailed')}}</div>
+    @endif
     <div class="m-auto p-3  border rounded-bottom rounded-circle bg-blue text-light">
         Write A Post
     </div>

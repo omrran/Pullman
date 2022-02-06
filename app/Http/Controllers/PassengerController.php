@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\addNewPost;
+use App\Events\reserveASeat;
 use App\Models\CompanyPost;
 use App\Models\Passenger;
 use App\Models\PassengerPost;
 use App\Models\ReserveList;
 use App\Models\Trip;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -18,6 +21,21 @@ class PassengerController extends Controller
         'BLOCKED' => 'blocked',
         'UNBLOCKED' => 'unblocked'
     ];
+    const EVENT_TYPE = [
+        'NEW_TRIP' => 'newTrip',
+        'NEW_POST' => 'newPost',
+        'RESERVE_TRIP' => 'reserveTrip'
+    ];
+    const ACTOR_TYPE = [
+        'PASSENGER' => 'passenger',
+        'COMPANY' => 'company',
+    ];
+    const OBJECT_TYPE = [
+        'POST' => 'post',
+        'TRIP' => 'trip',
+        'RESERVE' => 'reserve',
+    ];
+
     const IMAGE_NAME = 'passenger_account.jpg';
 
     public function checkPassengerLogin(Request $request)
@@ -83,8 +101,8 @@ class PassengerController extends Controller
             'lName' => $request->lName,
             'phone' => $request->phone,
             'idn' => $request->idn,
-            'imagePath' => self::IMAGE_NAME,
-            'status' => self::PASSENGER_STATUS['UNBLOCKED'],
+            'imagePath' => Constants::IMAGE_NAME,
+            'status' => Constants::PASSENGER_STATUS['UNBLOCKED'],
             'password' => Hash::make($request->password)
         ]);
         return redirect('/login-passenger')->with(['Success' => 'your register is done']);
@@ -94,7 +112,7 @@ class PassengerController extends Controller
     {
         if (Session::has('LoggedPassenger')) {
             $passenger = Passenger::where('id', Session::get('LoggedPassenger'))->first();
-             $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+            $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
 
             return view('passenger/passengerProfile', ['passenger' => $passenger, 'myReservations' => $myReservations]);
         }
@@ -111,18 +129,23 @@ class PassengerController extends Controller
 
     public function savePost(Request $request)
     {
+        //check if the account is Blocked
+        if (Passenger::select('status')->where('id', Session::get('LoggedPassenger'))->first()->status == Constants::PASSENGER_STATUS['BLOCKED']) {
+            return redirect()->back()->with(['writePostFailed' => 'your Account is Blocked']);
+        }
         if (trim($request->all()['post']) == "") {
             return redirect()->back();
         }
-//        if (Session::has('LoggedCompany')) {
-//            CompanyPost::create(['compId' => Session::get('LoggedCompany'), 'content' => $request->post]);
-//            return redirect('/company-profile/news');
-//        }
-
-        if (Session::has('LoggedPassenger')) {
-            PassengerPost::create(['passId' => Session::get('LoggedPassenger'), 'content' => $request->post]);
-            return redirect('/passenger-profile/news');
-        }
+        $idPost = PassengerPost::create(['passId' => Session::get('LoggedPassenger'), 'content' => $request->post])->id;
+        //register A log:
+        event(new addNewPost(
+            Constants::EVENT_TYPE['NEW_POST'],
+            Constants::ACTOR_TYPE['PASSENGER'],
+            Session::get('LoggedPassenger'),
+            Constants::OBJECT_TYPE['POST'],
+            $idPost
+        ));
+        return redirect('/passenger-profile/news');
 
     }
 
@@ -233,6 +256,49 @@ class PassengerController extends Controller
 
 //        return PassengerController::where('id', Session::get('LoggedPassenger'))->first();
         return redirect('/passenger-profile/view-profile')->with(['pass_profile_edit_done' => 'Your data has been modified successfully']);
+    }
+
+    public function reserveASeat($tripId)
+    {
+        //check if the account is Blocked
+        if (Passenger::select('status')->where('id', Session::get('LoggedPassenger'))->first()->status == Constants::PASSENGER_STATUS['BLOCKED']) {
+            return response()->json(['res' => 'Your Account is blocked']);
+        }
+        $trip = Trip::with('company')->where('id', $tripId)->first();
+        $re = ReserveList::where('passId', Session::get('LoggedPassenger'))->where('tripId', $tripId)->get();
+
+        if ($trip->numSeats == 0)
+            return response()->json(['res' => false]);
+
+        if (count($re) != 0) {
+            return response()->json(['res' => 'you already reserve a seat in this trip']);
+        } else if (count($re) == 0) {
+            $result = DB::transaction(function () use ($tripId, $trip) {
+                $idReservation = ReserveList::create([
+                    'tripId' => $tripId,
+                    'passId' => Session::get('LoggedPassenger'),
+                    'compName' => $trip->company->compName,
+                    'time' => $trip->time
+                ])->id;
+
+                $trip->numSeats--;
+                $trip->save();
+
+                //register A log:
+                event(new reserveASeat(
+                    Constants::EVENT_TYPE['RESERVE_TRIP'],
+                    Constants::ACTOR_TYPE['PASSENGER'],
+                    Session::get('LoggedPassenger'),
+                    Constants::OBJECT_TYPE['RESERVE'],
+                    $idReservation
+                ));
+                return true;
+            });
+
+            return response()->json(['res' => $result]);
+
+        }
+
     }
 
     public function logOutPass()

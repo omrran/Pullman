@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\addNewPost;
+use App\Events\addNewTrip;
+use App\Events\reserveASeat;
+use App\Listeners\newPostLog;
+use App\Listeners\newReservationLog;
+use App\Listeners\newTripLog;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +24,16 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        addNewTrip::class => [
+            newTripLog::class,
+        ],
+        addNewPost::class => [
+            newPostLog::class,
+        ],
+        reserveASeat::class => [
+            newReservationLog::class,
+        ],
+
     ];
 
     /**

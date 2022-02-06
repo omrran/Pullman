@@ -53,6 +53,7 @@
                                 login
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/login-admin">As Admin</a></li>
                                 <li><a class="dropdown-item" href="/login-company">As Company</a></li>
                                 <li><a class="dropdown-item" href="/login-passenger">As Passenger</a></li>
                             </ul>

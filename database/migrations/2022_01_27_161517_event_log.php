@@ -14,11 +14,13 @@ class EventLog extends Migration
     public function up()
     {
         Schema::create(
-            'eventslog', function (Blueprint $table) {
+            'eventsLog', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('eventType');
-            $table->string('subjectId');//id of company or passenger
-            $table->string('objectId'); //id of trip or post
+            $table->string('eventType',25);
+            $table->string('actorType',10);
+            $table->unsignedInteger('actorId');
+            $table->string('objectType');
+            $table->unsignedInteger('objectId');
             $table->timestamps();
         });
     }

@@ -8,13 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class EventLog extends Model
 {
 //    use HasFactory;
-    protected $table='eventslog';
+    protected $table = 'eventsLog';
     protected $fillable = [
         'id',
         'eventType',
-        'subjectId',
+        'actorType',
+        'actorId',
         'objectId',
+        'objectType',
         'created_at',
         'updated_at'
     ];
 }
+

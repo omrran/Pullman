@@ -27,7 +27,7 @@ Route::get('/whatpullman', function () {
 });
 
 Route::get('/login-admin', function () {
-    return view('loginAdmin');
+    return view('admin.loginAdmin');
 })->middleware('alreadyLoggedIn');
 
 Route::get('/login-company', function () {
@@ -66,6 +66,14 @@ Route::group(['prefix' => 'admin-profile', 'middleware' => 'checkAuthAdmin'], fu
     Route::get('/logs', [MainController::class, 'adminProfile_logs']);
     Route::get('/block-company/{id}', [MainController::class, 'adminProfile_blockComp']);
     Route::get('/unblock-company/{id}', [MainController::class, 'adminProfile_unBlockComp']);
+    Route::get('/company/{id}', [MainController::class, 'showACompany']);
+    Route::get('/passenger/{id}', [MainController::class, 'showAPassenger']);
+    Route::get('/trip/{id}', [MainController::class, 'showATrip']);
+    Route::get('/company/post/{id}', [MainController::class, 'showACompPost']);
+    Route::get('/passenger/post/{id}', [MainController::class, 'showAPassPost']);
+    Route::get('/reserve/{id}', [MainController::class, 'showAReserve']);
+
+
     Route::get('/log-out-adm', [MainController::class, 'logOutAdm']);
 
 
@@ -85,11 +93,10 @@ Route::group(['prefix' => 'company-profile', 'middleware' => 'checkAuthCompany']
     Route::post('/save-post', [CompanyController::class, 'savePost']);
     Route::get('/news', [CompanyController::class, 'news']);
     Route::post('/edit-trip', [CompanyController::class, 'editTrip']);
-
     Route::get('/view-profile', [CompanyController::class, 'viewProfile']);
     Route::get('/edit-profile', [CompanyController::class, 'editProfile']);
     Route::post('/save-new-profile-info', [CompanyController::class, 'saveNewProfileInfo']);
-
+    Route::get('/activity-log', [CompanyController::class, 'activityLog']);
     Route::get('/log-out-comp', [CompanyController::class, 'logOutComp']);
 
 
@@ -104,10 +111,11 @@ Route::group(['prefix' => 'passenger-profile', 'middleware' => 'checkAuthPasseng
     Route::get('/view-profile', [PassengerController::class, 'viewProfile']);
     Route::get('/edit-profile', [PassengerController::class, 'editProfile']);
     Route::post('/save-new-profile-info', [PassengerController::class, 'saveNewProfileInfo']);
+    Route::post('/activity-log', [PassengerController::class, 'activityLog']);
     Route::get('/log-out-pass', [PassengerController::class, 'logOutPass']);
 
     //this routes used in AJAX calls in Public/js/code.js file ;
-    Route::get('/reserve-seat/{idTrip}', [MainController::class, 'reserveASeat']);
+    Route::get('/reserve-seat/{idTrip}', [PassengerController::class, 'reserveASeat']);
 
 });
 

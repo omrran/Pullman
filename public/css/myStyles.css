@@ -332,4 +332,8 @@ a:hover {
 .negative-margin-top{
     margin-top: -7px;
 }
+.make-border-big-hover:hover{
+    border-bottom-color: #1a1e21;
+    border-bottom-width: 3px ;
+}
 

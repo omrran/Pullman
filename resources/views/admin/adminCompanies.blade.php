@@ -1,4 +1,4 @@
-@extends('adminProfile')
+@extends('admin.adminProfile')
 
 @section('main content')
 

@@ -1,8 +1,9 @@
-@extends('adminProfile')
+@extends('admin.adminProfile')
 
 @section('main content')
     <table class="table table-success table-striped table-bordered">
         <tr>
+            <th >id</th>
             <th >passenger</th>
             <th>phone</th>
             <th>IDN</th>
@@ -11,6 +12,7 @@
         </tr>
         @foreach($passengers as $passenger)
         <tr id="row{{$passenger->id}}">
+            <td id="id{{$passenger->id}}">{{$passenger->id}}</td>
             <td onclick="toggleImgSize('img{{$passenger->id}}')" class="mouse-custom-hover d-flex justify-content-start" title="Click to make image bigger">
                 <img id="img{{$passenger->id}}" class="float-start rounded-circle animation-custom-img" src="{{asset('photos/'.$passenger->imagePath)}}" style="width: 50px;height: 50px"  alt="">
                 <p id="name{{$passenger->id}}" class="float-start px-2">{{$passenger->fName}} {{$passenger->lName}}</p>

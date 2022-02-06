@@ -28,13 +28,13 @@ function blockPassenger(pass_id, row_id) {
             // console.log(JSON.parse(xhttp.responseText).id);
             // console.log(xhttp.responseText);
             let row = document.getElementById(row_id);
-            console.log(row.getElementsByTagName('td')[3]);
-            //update td element that has status :
-            row.getElementsByTagName('td')[3].innerText = 'blocked';
             console.log(row.getElementsByTagName('td')[4]);
+            //update td element that has status :
+            row.getElementsByTagName('td')[4].innerText = 'blocked';
+            console.log(row.getElementsByTagName('td')[5]);
             //update button element in td element that has function of blocking :
 
-            row.getElementsByTagName('td')[4]
+            row.getElementsByTagName('td')[5]
                 .innerHTML = '<button id="unblock' + pass_id + '" type="button" class="btn btn-success  mt-1" onclick="unBlockPassenger(' + pass_id + ',\'row' + pass_id + '\')">Unblock</button>';
             // console.log(row2);
 
@@ -62,13 +62,13 @@ function unBlockPassenger(pass_id, row_id) {
             // console.log(JSON.parse(xhttp.responseText).id);
             // console.log(xhttp.responseText);
 
-            console.log(row.getElementsByTagName('td')[3]);
-            //update td element that has status :
-            row.getElementsByTagName('td')[3].innerText = 'unblocked';
             console.log(row.getElementsByTagName('td')[4]);
+            //update td element that has status :
+            row.getElementsByTagName('td')[4].innerText = 'unblocked';
+            console.log(row.getElementsByTagName('td')[5]);
             //update button element in td element that has function of blocking :
 
-            row.getElementsByTagName('td')[4]
+            row.getElementsByTagName('td')[5]
                 .innerHTML = '<button id="unblock' + pass_id + '" type="button" class="btn btn-warning  mt-1" onclick="blockPassenger(' + pass_id + ',\'row' + pass_id + '\')">Block</button>';
             // console.log(row2);
 
@@ -132,22 +132,26 @@ function hide(id) {
 }
 
 function reserveASeat(tripId, button) {
+
+    // console.log(tripId, button);
+
+    //
     const xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function () {
         console.log(xhttp.readyState);
 
         if (xhttp.readyState === 4 && xhttp.status === 200) {
-            console.log('xhttp.responseText');
-            console.log('xhttp.responseText');
-            console.log(JSON.parse(xhttp.responseText));
             if (JSON.parse(xhttp.responseText).res === true) {
                 button.innerText = "done"
             } else if (JSON.parse(xhttp.responseText).res === false) {
                 button.innerText = "there are no seats in this trip";
+            } else if (JSON.parse(xhttp.responseText).res === 'Your Account is blocked') {
+                button.innerText = "Your Account is blocked";
             } else {
                 button.innerText = JSON.parse(xhttp.responseText).res;
             }
+            console.log(JSON.parse(xhttp.responseText).res)
 
         }
     };
@@ -158,10 +162,11 @@ function reserveASeat(tripId, button) {
     );
     xhttp.send();
 }
-function showEditProfile(id){
-    console.log(document.getElementById('editprofile'+id).style.display);
-    document.getElementById('editprofile'+id).classList.remove('d-none');
-    document.getElementById('editprofile'+id).classList.add('d-flex');
+
+function showEditProfile(id) {
+    console.log(document.getElementById('editprofile' + id).style.display);
+    document.getElementById('editprofile' + id).classList.remove('d-none');
+    document.getElementById('editprofile' + id).classList.add('d-flex');
 
 }
 

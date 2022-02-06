@@ -40,12 +40,13 @@
                         <img width="125" height="125" class="rounded-circle img-thumbnail m-auto"
                              src="{{asset('photos/'.$company->imagePath)}}">
                         <h5>{{$company->compName}}</h5>
+                        @if($company->status == 'blocked')<small class="text-danger">blocked account</small>@endif
                     </div>
                     <div class=" border border-secondary m-auto  rounded-pill view-custom-pro  px-5">
                         <a href="/company-profile/view-profile">view
                             profile</a></div>
                     <hr class="m-2 "/>
-                    <div class="text-start sidebar-custom-item p-1"><a href="#">Activity Log</a></div>
+                    <div class="text-start sidebar-custom-item p-1"><a href="/company-profile/activity-log">Activity Log</a></div>
                     <hr class="m-2 "/>
                     <div class="text-start sidebar-custom-item p-1"><a href="/company-profile/log-out-comp">Log out</a>
                     </div>
