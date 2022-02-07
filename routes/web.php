@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
-use App\Http\Controllers\MainController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PassengerController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -48,39 +48,39 @@ Route::get('/joinUs-passenger', function () {
 })->middleware('alreadyLoggedIn');
 
 
-Route::get('/companies', [MainController::class, 'getCompanies']);
+Route::get('/companies', [AdminController::class, 'getCompanies']);
 
 Route::post('/join-company', [CompanyController::class, 'joinCompany']);
 Route::post('/join-passenger', [PassengerController::class, 'joinPassenger']);
 
 Route::post('/company-page', [CompanyController::class, 'checkCompanyLogin']);
 Route::post('/passenger-page', [PassengerController::class, 'checkPassengerLogin']);
-Route::post('/admin-page', [MainController::class, 'checkAdminLogin']);
+Route::post('/admin-page', [AdminController::class, 'checkAdminLogin']);
 
 
 Route::group(['prefix' => 'admin-profile', 'middleware' => 'checkAuthAdmin'], function () {
-    Route::get('/', [MainController::class, 'adminProfile']);
-    Route::get('/companies', [MainController::class, 'adminProfile_companies']);
-    Route::get('/passengers', [MainController::class, 'adminProfile_passengers']);
-    Route::get('/companies-requests', [MainController::class, 'adminProfile_companies_requests']);
-    Route::get('/logs', [MainController::class, 'adminProfile_logs']);
-    Route::get('/block-company/{id}', [MainController::class, 'adminProfile_blockComp']);
-    Route::get('/unblock-company/{id}', [MainController::class, 'adminProfile_unBlockComp']);
-    Route::get('/company/{id}', [MainController::class, 'showACompany']);
-    Route::get('/passenger/{id}', [MainController::class, 'showAPassenger']);
-    Route::get('/trip/{id}', [MainController::class, 'showATrip']);
-    Route::get('/company/post/{id}', [MainController::class, 'showACompPost']);
-    Route::get('/passenger/post/{id}', [MainController::class, 'showAPassPost']);
-    Route::get('/reserve/{id}', [MainController::class, 'showAReserve']);
+    Route::get('/', [AdminController::class, 'adminProfile']);
+    Route::get('/companies', [AdminController::class, 'adminProfile_companies']);
+    Route::get('/passengers', [AdminController::class, 'adminProfile_passengers']);
+    Route::get('/companies-requests', [AdminController::class, 'adminProfile_companies_requests']);
+    Route::get('/logs', [AdminController::class, 'adminProfile_logs']);
+    Route::get('/block-company/{id}', [AdminController::class, 'adminProfile_blockComp']);
+    Route::get('/unblock-company/{id}', [AdminController::class, 'adminProfile_unBlockComp']);
+    Route::get('/company/{id}', [AdminController::class, 'showACompany']);
+    Route::get('/passenger/{id}', [AdminController::class, 'showAPassenger']);
+    Route::get('/trip/{id}', [AdminController::class, 'showATrip']);
+    Route::get('/company/post/{id}', [AdminController::class, 'showACompPost']);
+    Route::get('/passenger/post/{id}', [AdminController::class, 'showAPassPost']);
+    Route::get('/reserve/{id}', [AdminController::class, 'showAReserve']);
 
 
-    Route::get('/log-out-adm', [MainController::class, 'logOutAdm']);
+    Route::get('/log-out-adm', [AdminController::class, 'logOutAdm']);
 
 
     //this routes used in AJAX calls in Public/js/code.js file ;
-    Route::get('/activate-company/{id}', [MainController::class, 'activateCompany']);
-    Route::get('/block-passenger/{id}', [MainController::class, 'adminProfile_blockPassenger']);
-    Route::get('/unBlock-passenger/{id}', [MainController::class, 'adminProfile_unBlockPassenger']);
+    Route::get('/activate-company/{id}', [AdminController::class, 'activateCompany']);
+    Route::get('/block-passenger/{id}', [AdminController::class, 'adminProfile_blockPassenger']);
+    Route::get('/unBlock-passenger/{id}', [AdminController::class, 'adminProfile_unBlockPassenger']);
 });
 
 Route::group(['prefix' => 'company-profile', 'middleware' => 'checkAuthCompany'], function () {
@@ -97,6 +97,8 @@ Route::group(['prefix' => 'company-profile', 'middleware' => 'checkAuthCompany']
     Route::get('/edit-profile', [CompanyController::class, 'editProfile']);
     Route::post('/save-new-profile-info', [CompanyController::class, 'saveNewProfileInfo']);
     Route::get('/activity-log', [CompanyController::class, 'activityLog']);
+    Route::get('/trip/{id}', [CompanyController::class, 'showTrip']);
+    Route::get('/post/{id}', [CompanyController::class, 'showPost']);
     Route::get('/log-out-comp', [CompanyController::class, 'logOutComp']);
 
 
@@ -111,7 +113,9 @@ Route::group(['prefix' => 'passenger-profile', 'middleware' => 'checkAuthPasseng
     Route::get('/view-profile', [PassengerController::class, 'viewProfile']);
     Route::get('/edit-profile', [PassengerController::class, 'editProfile']);
     Route::post('/save-new-profile-info', [PassengerController::class, 'saveNewProfileInfo']);
-    Route::post('/activity-log', [PassengerController::class, 'activityLog']);
+    Route::get('/activity-log', [PassengerController::class, 'activityLog']);
+    Route::get('/reserve/{id}', [PassengerController::class, 'showReserve']);
+    Route::get('/post/{id}', [PassengerController::class, 'showPost']);
     Route::get('/log-out-pass', [PassengerController::class, 'logOutPass']);
 
     //this routes used in AJAX calls in Public/js/code.js file ;

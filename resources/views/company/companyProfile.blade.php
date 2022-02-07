@@ -32,7 +32,6 @@
 
                 <div class="bg-dark w-100 text-white fs-4 rounded-pill-right-custom" style="height: 40px">
                         Company Profile
-                        Passenger Profile
                 </div>
                 <div
                     class="p-2  d-flex flex-column justify-content-start border border-secondary border-custom-side d-flex flex-column justify-content-start bg-body">

@@ -37,7 +37,7 @@
                             <div class="text-center sidebar-custom-item "><a href="/passenger-profile/trip/{{$reserve->tripId}}">{{$reserve->compName}} at : {{$reserve->time}}</a> </div>
                         @endforeach
                         <hr class="m-2 "/>
-                        <div class="text-start sidebar-custom-item p-1"><a href="#">Activity Log</a> </div>
+                        <div class="text-start sidebar-custom-item p-1"><a href="/passenger-profile/activity-log">Activity Log</a> </div>
                         <hr class="m-2 "/>
                         <div class="text-start sidebar-custom-item p-1"><a href="/passenger-profile/log-out-pass">Log out</a> </div>
 

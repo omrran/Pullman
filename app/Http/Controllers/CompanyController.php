@@ -20,10 +20,6 @@ use Illuminate\Support\Facades\Validator;
 class CompanyController extends Controller
 {
 
-
-    //default image name for new company
-    const IMAGE_NAME = 'company_account.jpg';
-
     public function checkCompanyLogin(Request $request)
     {
         $rules = [
@@ -90,7 +86,7 @@ class CompanyController extends Controller
             'email' => $request->email,
             'telephone' => $request->telephone,
             'address' => $request->address,
-            'imagePath' => Constants::IMAGE_NAME,
+            'imagePath' => Constants::COMPANY_IMAGE_NAME,
             'status' => Constants::COMPANY_STATUS['PENDING'],
             'password' => Hash::make($request->password),
         ]);
@@ -364,6 +360,16 @@ class CompanyController extends Controller
             $myLogs[$i]->actorType .= ' ' . $n->compName;
         }
         return view('company/companyLog', ['company' => $company, 'myLogs' => $myLogs]);
+    }
+    public function showTrip($id){
+        $trip = Trip::with('company')->where('id', $id)->first();
+        $company = Company::where('id',Session::get('LoggedCompany'))->first();
+        return view('company/showATrip', ['trip' => $trip,'company'=>$company]);
+    }
+    public function showPost($id){
+        $company = Company::where('id',Session::get('LoggedCompany'))->first();
+        $post = CompanyPost::with('company')->where('id',$id)->first();
+        return view('company/showAPost',['company' => $company, 'post' => $post]);
     }
 
     public function logOutComp()

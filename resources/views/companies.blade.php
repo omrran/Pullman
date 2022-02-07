@@ -12,7 +12,7 @@
 @section('content')
     {{--    @include('navbar')--}}
     <x-navbar/>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center flex-wrap">
         @foreach($companies as $company)
         <x-company photo="{{$company->imagePath}}" name="{{$company->compName}}" address="{{$company->address}}" telephone="{{$company->telephone}}"/>
         @endforeach

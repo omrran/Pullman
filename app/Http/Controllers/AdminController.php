@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use phpDocumentor\Reflection\Types\Context;
 
-class MainController extends Controller
+class AdminController extends Controller
 {
 
     public function checkAdminLogin(Request $request)
@@ -204,7 +204,7 @@ class MainController extends Controller
     public function getCompanies()
     {
 
-        $companies = Company::get();
+        $companies = Company::where('status','!=',Constants::COMPANY_STATUS['PENDING'])->get();
         return view('companies', compact('companies'));
     }
 

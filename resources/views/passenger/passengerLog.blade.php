@@ -1,7 +1,6 @@
-@extends('company.companyProfile')
+@extends('passenger.passengerProfile')
 
 @section('main content')
-
     <table class="table table-success table-striped table-bordered w-95 mx-auto">
         <tr>
 
@@ -13,11 +12,11 @@
                 <td><strong>{{$log->actorType}}</strong>
                     add new
                     <strong class="mouse-custom-hover"
-                            @if($log->objectType =='trip')
-                            onclick="window.location='{{ url("/company-profile/trip/".$log->objectId) }}'"
+                            @if($log->objectType =='reserve')
+                            onclick="window.location='{{ url("/passenger-profile/reserve/".$log->objectId) }}'"
 
-                            @elseif($log->objectType =='post' && str_contains($log->actorType, 'company'))
-                            onclick="window.location='{{ url("/company-profile/post/".$log->objectId) }}'"
+                            @elseif($log->objectType =='post' && str_contains($log->actorType,'passenger'))
+                            onclick="window.location='{{ url("/passenger-profile/post/".$log->objectId) }}'"
 
                         @endif
 
@@ -30,4 +29,3 @@
         @endforeach
     </table>
 @endsection
-

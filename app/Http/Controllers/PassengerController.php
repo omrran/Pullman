@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Events\addNewPost;
 use App\Events\reserveASeat;
+use App\Models\Company;
 use App\Models\CompanyPost;
+use App\Models\EventLog;
 use App\Models\Passenger;
 use App\Models\PassengerPost;
 use App\Models\ReserveList;
 use App\Models\Trip;
+use App\Traits\Constants;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,26 +20,6 @@ use Illuminate\Support\Facades\Validator;
 
 class PassengerController extends Controller
 {
-    const PASSENGER_STATUS = [
-        'BLOCKED' => 'blocked',
-        'UNBLOCKED' => 'unblocked'
-    ];
-    const EVENT_TYPE = [
-        'NEW_TRIP' => 'newTrip',
-        'NEW_POST' => 'newPost',
-        'RESERVE_TRIP' => 'reserveTrip'
-    ];
-    const ACTOR_TYPE = [
-        'PASSENGER' => 'passenger',
-        'COMPANY' => 'company',
-    ];
-    const OBJECT_TYPE = [
-        'POST' => 'post',
-        'TRIP' => 'trip',
-        'RESERVE' => 'reserve',
-    ];
-
-    const IMAGE_NAME = 'passenger_account.jpg';
 
     public function checkPassengerLogin(Request $request)
     {
@@ -101,7 +84,7 @@ class PassengerController extends Controller
             'lName' => $request->lName,
             'phone' => $request->phone,
             'idn' => $request->idn,
-            'imagePath' => Constants::IMAGE_NAME,
+            'imagePath' => Constants::PASSENGER_IMAGE_NAME,
             'status' => Constants::PASSENGER_STATUS['UNBLOCKED'],
             'password' => Hash::make($request->password)
         ]);
@@ -298,6 +281,44 @@ class PassengerController extends Controller
             return response()->json(['res' => $result]);
 
         }
+
+    }
+    public function activityLog(){
+        $passenger = Passenger::where('id',Session::get('LoggedPassenger'))->first();
+        $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+
+        $myLogs = EventLog::where('actorType', Constants::ACTOR_TYPE['PASSENGER'])
+            ->where('actorId', Session::get('LoggedPassenger'))->get();
+        for ($i = 0; $i < count($myLogs); $i++) {
+            $n = Passenger::select('fName', 'lName')->where('id', $myLogs[$i]->actorId)->first();
+            $n = $n->fName . ' ' . $n->lName;
+            $myLogs[$i]->actorType .= ' ' . $n;
+        }
+        return view('passenger/passengerLog', ['passenger' => $passenger, 'myLogs' => $myLogs,'myReservations' => $myReservations,
+        ]);
+    }
+    public function showReserve($id){
+        $passenger = Passenger::where('id',Session::get('LoggedPassenger'))->first();
+        $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+        $myReservation = $myReservations->where('id',$id)->first();
+        return view('passenger/showAReserve',[
+            'passenger'=>$passenger,
+            'myReservations'=>$myReservations,
+            'myReservation'=>$myReservation
+            ]);
+
+    }
+    public function showPost($id){
+        $passenger = Passenger::where('id',Session::get('LoggedPassenger'))->first();
+        $myReservations = ReserveList::where('passId', Session::get('LoggedPassenger'))->get();
+        $post = PassengerPost::with('passenger')->where('id',$id)->first();
+
+
+        return view('passenger/showAPost',[
+            'passenger'=>$passenger,
+            'myReservations'=>$myReservations,
+            'post'=>$post
+        ]);
 
     }
 
